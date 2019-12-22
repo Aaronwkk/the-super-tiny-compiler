@@ -105,8 +105,8 @@
  * Well good, because this is exactly what we are going to compile. While this
  * is neither a complete LISP or C syntax, it will be enough of the syntax to
  * demonstrate many of the major pieces of a modern compiler.
- * 非常好，因为这就是我们的编译器要转化的格式。不管是LISP或者C的格式，都已经足够来演示许多
- * 现代编译器的主要作用
+ * 非常好，因为这就是我们的编译器要转化的格式。不管是LISP或者C的格式，
+ * 都已经足够来演示许多现代编译器的主要作用
  */
 
 /**
@@ -134,7 +134,7 @@
  *
  * Parsing typically gets broken down into two phases: Lexical Analysis and
  * Syntactic Analysis.
- * 解析通常可以拆分成2个方面：Lexical Analysis(词法分析)和
+ * 解析通常可以拆分成2个步骤：Lexical Analysis(词法分析)和
  * Syntactic Analysis (句法分析).
  *
  * 1. *Lexical Analysis* takes the raw code and splits it apart into these things
@@ -145,15 +145,15 @@
  *    Tokens are an array of tiny little objects that describe an isolated piece
  *    of the syntax. They could be numbers, labels, punctuation, operators,
  *    whatever.
- *    Tokens是一组数组，里面装着一些代表部分独立格式的对象。它们可以是数字，标签，标点，操作符
- *    或者其他东西。
+ *    Tokens是一组数组，里面装着一些代表部分独立格式的对象。
+ *    它们可以是数字，标签，标点，操作符或者其他东西。
  *    
  *
  * 2. *Syntactic Analysis* takes the tokens and reformats them into a
  *    representation that describes each part of the syntax and their relation
  *    to one another. This is known as an intermediate representation or
  *    Abstract Syntax Tree.
- * 2. *Syntactic Analysis* (句法分析) 把获取到的tokens重新整理成语法互相关联的表达形式
+ * 2. *Syntactic Analysis* (句法分析) 把tokens重新整理成语法互相关联的表达形式
  *    这也被称为intermediate representation (中间层) 或者 
  *    Abstract Syntax Tree 抽象语法树
  *
@@ -169,7 +169,7 @@
  *   (add 2 (subtract 4 2))
  * 
  * Tokens might look something like this:
- * (通过词法分析)Tokens 会转化成下面的数组
+ * (通过词法分析) 原代码会转化成如下的 Tokens 数组
  * 
  *   [
  *     { type: 'paren',  value: '('        },
@@ -184,7 +184,7 @@
  *   ]
  *
  * And an Abstract Syntax Tree (AST) might look like this:
- * (通过句法分析) AST 会转化成下面的对象
+ * (通过句法分析) 代码将会转化成如下的 AST (语法树)对象
  * 
  *   {
  *     type: 'Program',
@@ -229,12 +229,12 @@
  * There are these objects with a type property. Each of these are known as an
  * AST Node. These nodes have defined properties on them that describe one
  * isolated part of the tree.
- * 你可能注意到了，我们的AST有一些长得很像得元素。
+ * 你可能注意到了，我们的AST中有一些长得很像得元素。
  * 这些对象都有类型的属性，它们都是AST(语法树)的节点。
  * 这些节点的属性单独描述了AST(语法树)的一部分
  * 
  * We can have a node for a "NumberLiteral":
- * 我们有一个"NumberLiteral"(数字片段)节点
+ * 我们可能会有一个名为"NumberLiteral"(数字片段)的节点
  * 
  *   {
  *     type: 'NumberLiteral',
@@ -242,7 +242,7 @@
  *   }
  *
  * Or maybe a node for a "CallExpression":
- * 或者可能是一个"CallExpression"(调用语句)节点
+ * 或者可能是一个名为"CallExpression"(调用语句)的节点
  *   {
  *     type: 'CallExpression',
  *     name: 'subtract',
@@ -255,7 +255,7 @@
  * on it.
  * 我们可以通过增加/删减/替换节点的属性来修改AST(语法树)。
  * 我们可以增加新的节点，删减节点，或者在不改变已有的AST(语法树)的情况下，
- * 根据已有的AST创造一个全新的AST(语法树)
+ * 根据已有的AST(语法树)创造一个全新的AST(语法树)
  *
  * Since we’re targeting a new language, we’re going to focus on creating an
  * entirely new AST that is specific to the target language.
@@ -295,10 +295,10 @@
  *   }
  *
  * So for the above AST we would go:
- * 以上的AST(语法树)我们遍历了
+ * 根据以上的AST(语法树)我们会遍历:
  *
  *   1. Program - Starting at the top level of the AST
- *   1. 程序 - 在AST(语法树)的最顶层开始
+ *   1. 程序 - 从在AST(语法树)的最顶层开始
  * 
  *   2. CallExpression (add) - Moving to the first element of the Program's body
  *   2. 调用语句 (add) - 移动到程序主体的第一个元素
@@ -326,12 +326,12 @@
  * to represent operations on elements of an object structure.
  * 我用"visiting"(访问)这个词是因为这种模式准确地表达了在一个对象的结构里如何进行操作
  * 
- * Visitors (遍历器)
+ * Visitors (访问器)
  * --------
  *
  * The basic idea here is that we are going to create a “visitor” object that
  * has methods that will accept different node types.
- * 关于遍历器最基本的概念是我们会创造一个"遍历器"对象，
+ * (关于访问器)最基本的概念如下，我们会创造一个"访问器"对象，
  * 这个对象拥有能够接收不同类型的节点的函数
  * 
  *   var visitor = {
@@ -342,11 +342,11 @@
  * When we traverse our AST, we will call the methods on this visitor whenever we
  * "enter" a node of a matching type.
  * 当我们遍历AST(语法树)的时候，每当我们"enter"(进入)到一个节点，
- * 我们就会调用"遍历器"的相关函数
+ * 我们就会调用"访问器"的相关函数
  * 
  * In order to make this useful we will also pass the node and a reference to
  * the parent node.
- * 为了让这(遍历器的函数)更有用，我们传入相关的节点和(该节点的)父节点的参考
+ * 为了让这(访问器的函数)变得有效，我们会传入相关的节点和(该节点的)父节点的参考
  *
  *   var visitor = {
  *     NumberLiteral(node, parent) {},
@@ -387,7 +387,7 @@
  *   <- Program (exit)
  *
  * In order to support that, the final form of our visitor will look like this:
- * 为了做到(进入和离开都能接收)这种效果，最终我们的visitor(遍历器)会做成下面的样子:
+ * 为了做到(进入和离开都能接收)这种效果，最终我们的visitor(访问器)会做成下面的样子:
  * 
  *   var visitor = {
  *     NumberLiteral: {
@@ -436,7 +436,7 @@
  *
  * But now you should have a general high-level idea of what most compilers look
  * like.
- * 但是现在你应该对绝大部分的编译器的样子有一个高层次的了解。
+ * 但是现在你应该对绝大部分的编译器的样子有一个概括的了解。
  *
  * Now that I’ve explained all of this, you’re all good to go write your own
  * compilers right?
@@ -471,16 +471,16 @@
 
 // We start by accepting an input string of code, and we're gonna set up two
 // things...
-//首先我们设置tokenizer，接受1个装有文字代码的input(作为参数)，
-//然后我们将会设置2个东西。。。
+//(首先我们定义tokenizer函数，函数函数)接受1个input(作为参数)，
+//然后我们将会定义2个东西。。。
 function tokenizer(input) {
 
   // A `current` variable for tracking our position in the code like a cursor.
-  // 一个 `current`(当前位置) 变量，用于追踪我们(遍历时)的位置，就好像光标一样。
+  // 定义一个 `current`(当前位置) 变量，用于追踪我们(遍历时)的位置，就好像光标一样。
   let current = 0;
 
   // And a `tokens` array for pushing our tokens to.
-  // 然后 一个 `tokens` 数组， 用于储存我们的tokens。
+  // 然后定义一个 `tokens` 数组， 用于储存我们的tokens。
   let tokens = [];
 
   // We start by creating a `while` loop where we are setting up our `current`
@@ -490,7 +490,7 @@ function tokenizer(input) {
   //
   // We do this because we may want to increment `current` many times within a
   // single loop because our tokens can be any length.
-  // 我们这么做是由于tokens可以是任意长度(的数组)，
+  // 我们这么做是由于tokens有可能是任意长度(的数组)，
   // `current`(变量)在一次循环中有可能会被多次增加，
   //
   while (current < input.length) {
@@ -513,7 +513,6 @@ function tokenizer(input) {
       // to an open parenthesis.
       // 如果字符是开括号，我们把一个新的token放到tokens数组里，
       // 这个新的token的类型是`paren`，数值是'('
-      //
       tokens.push({
         type: 'paren',
         value: '(',
@@ -896,7 +895,7 @@ function parser(tokens) {
  * So now we have our AST, and we want to be able to visit different nodes with
  * a visitor. We need to be able to call the methods on the visitor whenever we
  * encounter a node with a matching type.
- * 我们现在已经有AST(语法树)了，然后我们通过访问器访问不同的节点
+ * 我们现在已经有AST(语法树)了，然后我们想能够通过访问器访问不同的节点
  * 每当我们遇到符合种类的节点时，我们需要调用访问器相关的函数
  * 
  *   traverse(ast, {
